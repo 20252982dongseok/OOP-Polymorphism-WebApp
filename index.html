@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Overwatch OOP Polymorphism</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen p-8">
+
+<h1 class="text-4xl font-bold text-center mb-10">
+    Overwatch OOP Polymorphism Demo
+</h1>
+
+<!-- UML 구조 -->
+<div class="flex flex-col items-center mb-12">
+
+    <div class="bg-blue-600 text-white px-8 py-3 rounded-lg shadow">
+        OverwatchADT
+    </div>
+
+    <div class="text-3xl my-2">↓</div>
+
+    <div class="bg-blue-400 text-white px-8 py-3 rounded-lg shadow">
+        Overwatch
+    </div>
+
+    <div class="flex gap-16 mt-6">
+
+        <div class="bg-red-500 text-white px-8 py-3 rounded-lg shadow">
+            Reinhardt
+        </div>
+
+        <div class="bg-orange-500 text-white px-8 py-3 rounded-lg shadow">
+            Tracer
+        </div>
+
+    </div>
+</div>
+
+<!-- HP -->
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow mb-8">
+
+    <h2 class="text-xl font-bold mb-2">적 체력</h2>
+
+    <div class="w-full bg-gray-300 rounded-full h-6">
+
+        <div
+            id="hpBar"
+            class="bg-green-500 h-6 rounded-full"
+            style="width:100%">
+        </div>
+
+    </div>
+
+    <p id="hpText" class="mt-2 font-bold">
+        HP : 500
+    </p>
+
+</div>
+
+<!-- 캐릭터 -->
+<div class="flex justify-center gap-10 flex-wrap">
+
+    <!-- 라인하르트 -->
+    <div class="bg-white p-6 rounded-xl shadow w-72">
+
+        <h2 class="text-2xl font-bold text-center mb-4">
+            라인하르트
+        </h2>
+
+        <button
+            onclick="reinhardtAttack()"
+            class="w-full bg-red-500 text-white p-2 rounded mb-2 hover:opacity-80">
+
+            기본공격
+        </button>
+
+        <button
+            id="reinSkillBtn"
+            onclick="reinhardtSkill()"
+            class="w-full bg-yellow-500 text-white p-2 rounded hover:opacity-80">
+
+            궁극기
+        </button>
+
+    </div>
+
+    <!-- 트레이서 -->
+    <div class="bg-white p-6 rounded-xl shadow w-72">
+
+        <h2 class="text-2xl font-bold text-center mb-4">
+            트레이서
+        </h2>
+
+        <button
+            onclick="tracerAttack()"
+            class="w-full bg-orange-500 text-white p-2 rounded mb-2 hover:opacity-80">
+
+            기본공격
+        </button>
+
+        <button
+            id="tracerSkillBtn"
+            onclick="tracerSkill()"
+            class="w-full bg-yellow-500 text-white p-2 rounded hover:opacity-80">
+
+            궁극기
+        </button>
+
+    </div>
+
+</div>
+
+<!-- 결과창 -->
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow mt-8">
+
+    <h2 class="text-xl font-bold mb-3">
+        실행 결과
+    </h2>
+
+    <div id="result">
+        버튼을 눌러보세요.
+    </div>
+
+</div>
+
+<!-- 리셋 -->
+<div class="text-center mt-6">
+
+    <button
+        onclick="resetGame()"
+        class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:opacity-80">
+
+        체력 초기화
+    </button>
+
+</div>
+
+<script>
+
+let enemyHP = 500;
+
+let reinhardtUltimateUsed = false;
+let tracerUltimateUsed = false;
+
+function updateHP(){
+
+    if(enemyHP < 0)
+        enemyHP = 0;
+
+    document.getElementById("hpText").innerText =
+        "HP : " + enemyHP;
+
+    document.getElementById("hpBar").style.width =
+        (enemyHP / 500 * 100) + "%";
+}
+
+function showMessage(msg){
+    document.getElementById("result").innerText = msg;
+}
+
+/* Reinhardt */
+
+function reinhardtAttack(){
+
+    enemyHP -= 85;
+
+    updateHP();
+
+    showMessage(
+        "라인하르트 망치 공격!\n" +
+        "85 데미지!"
+    );
+}
+
+function reinhardtSkill(){
+
+    if(reinhardtUltimateUsed){
+
+        showMessage(
+            "라인하르트 궁극기는 이미 사용했습니다!"
+        );
+
+        return;
+    }
+
+    enemyHP -= 50;
+
+    reinhardtUltimateUsed = true;
+
+    document.getElementById("reinSkillBtn").disabled = true;
+
+    updateHP();
+
+    showMessage(
+        "라인하르트 망치 나가신다!\n" +
+        "50 데미지!"
+    );
+}
+
+/* Tracer */
+
+function tracerAttack(){
+
+    enemyHP -= 6;
+
+    updateHP();
+
+    showMessage(
+        "트레이서 펄스 권총!\n" +
+        "6 데미지!"
+    );
+}
+
+function tracerSkill(){
+
+    if(tracerUltimateUsed){
+
+        showMessage(
+            "트레이서 궁극기는 이미 사용했습니다!"
+        );
+
+        return;
+    }
+
+    enemyHP -= 355;
+
+    tracerUltimateUsed = true;
+
+    document.getElementById("tracerSkillBtn").disabled = true;
+
+    updateHP();
+
+    showMessage(
+        "트레이서 잡았다!\n" +
+        "355 데미지!"
+    );
+}
+
+/* Reset */
+
+function resetGame(){
+
+    enemyHP = 500;
+
+    reinhardtUltimateUsed = false;
+    tracerUltimateUsed = false;
+
+    document.getElementById("reinSkillBtn").disabled = false;
+    document.getElementById("tracerSkillBtn").disabled = false;
+
+    updateHP();
+
+    showMessage(
+        "게임이 초기화되었습니다."
+    );
+}
+
+</script>
+
+</body>
+</html>
